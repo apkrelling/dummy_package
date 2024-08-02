@@ -14,4 +14,5 @@ G([get_dates]) -.-> E
 H([find_nearest]) -.-> E
 
 ```
+
 [comment]: <> (https://mermaid.js.org/syntax/flowchart.html)
