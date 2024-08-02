@@ -5,24 +5,22 @@
 # https://oceandata.sci.gsfc.nasa.gov/opendap/MODISA/L3SMI/
 # secondary:
 # https://www.earthdata.nasa.gov/
-
+from __future__ import annotations
 
 import time
 import warnings
 from datetime import datetime
 
-import matplotlib.dates as mdates
-import matplotlib.pyplot as plt
+import matplotlib.dates as mdates  # type: ignore[import-not-found]
+import matplotlib.pyplot as plt  # type: ignore[import-not-found]
 from matplotlib import cm, ticker
 from matplotlib.dates import DateFormatter
-
-from utilities import (
+from utilities import (  # type: ignore[import-not-found]
     find_nearest,
     get_opendap_urls,
     get_subsetted_dataset,
     save_dataset,
 )
-
 
 warnings.filterwarnings(
     "ignore", message="Log scale: values of z <= 0 have been masked"
@@ -57,7 +55,7 @@ formatter = DateFormatter("%Y-%m-%d")
 
 plt.ion()
 fig, ax = plt.subplots()
-for t in range(0, len(time_start)):
+for t in range(len(time_start)):
     img = ax.contourf(
         lon,
         lat,
