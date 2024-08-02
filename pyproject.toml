@@ -31,7 +31,6 @@ classifiers = [
 ]
 dynamic = ["version"]
 dependencies = [
-  "re >= 2.2.1",
   "netCDF4 >= 1.6.3",
   "numpy",
   "matplotlib >= 3.7.3",
