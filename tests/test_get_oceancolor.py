@@ -1,22 +1,24 @@
 # pytest test_get_chl3.py -v --durations=0
 from __future__ import annotations
 
+import importlib.metadata
 import os
 from urllib.request import urlopen
 
 import pytest
+from m.utilities import (  # type: ignore[import-not-found]
+    get_filelist_command,
+    get_opendap_urls,
+)
 
 import dummy_package as m
-
-from m.utilities import get_filelist_command, get_opendap_urls
-
-import importlib.metadata
 
 
 def test_version():
     assert importlib.metadata.version("dummy_package") == m.__version__
 
-@pytest.fixture
+
+@pytest.fixture()
 def settings_dict():
     return {
         "date_min": "2021-11-01 00:00:00",
@@ -33,10 +35,10 @@ def settings_dict():
 
 
 # temporary folder to store filelist.txt
-@pytest.fixture(scope="function") # noqa: PT003
+@pytest.fixture(scope="function")  # noqa: PT003
 def tmpdir(tmp_path):
-    tmp_dir = tmp_path # noqa: RET504
-    return tmp_dir
+    tmp_dir = tmp_path
+    return tmp_dir  # noqa: RET504
 
 
 # see if url to search for filenames is valid

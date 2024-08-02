@@ -6,21 +6,21 @@ import re
 import sys
 from datetime import date, datetime
 
-import netCDF4 as nc
-import numpy as np
+import netCDF4 as nc  # type: ignore[import-not-found]
+import numpy as np  # type: ignore[import-not-found]
 
 
-def debug(func):
+def debug(func):  # type: ignore[no-untyped-def]
     """Print the function signature and return value"""
 
     @functools.wraps(func)
-    def wrapper_debug(*args, **kwargs):
+    def wrapper_debug(*args, **kwargs):  # type: ignore[no-untyped-def]
         args_repr = [repr(a) for a in args]  # get args
         kwargs_repr = [f"{key}={val!r}" for key, val in kwargs.items()]  # get kwargs
         signature = ", ".join(args_repr + kwargs_repr)  # print the func called
-        print(f"Calling {func.__name__}({signature})") # noqa: T201
+        print(f"Calling {func.__name__}({signature})")  # noqa: T201
         value = func(*args, **kwargs)
-        print(f"{func.__name__!r} returned {value!r}")   # noqa: T201
+        print(f"{func.__name__!r} returned {value!r}")  # noqa: T201
         print(  # noqa: T201
             f"Data types {[type(item) for item in value]}"
         )  # print the output data types
@@ -48,7 +48,7 @@ def check_date_format(item: str) -> bool:
         return False
 
 
-def check_settings(settings_dict: dict):
+def check_settings(settings_dict: dict):  # type: ignore[no-untyped-def, type-arg]
     """Makes sure the settings have valid parameters.
 
     This function checks all the items in settings_dict to make sure
@@ -91,9 +91,9 @@ def check_settings(settings_dict: dict):
             "Terminating script."
         )
         sys.exit()
-    if not (
+    if (
         settings_dict["opendap_base_url"]
-        == "http://oceandata.sci.gsfc.nasa.gov/opendap/MODISA/"
+        != "http://oceandata.sci.gsfc.nasa.gov/opendap/MODISA/"
     ):
         print(  # noqa: T201
             "Invalid 'opendap_base_url' value. "
@@ -101,16 +101,16 @@ def check_settings(settings_dict: dict):
             "Terminating script."
         )
         sys.exit()
-    if not (settings_dict["level"] == "L3"):
+    if settings_dict["level"] != "L3":
         print("Invalid 'level' value. Must be 'L3'. Terminating script.")  # noqa: T201
         sys.exit()
-    if not (settings_dict["map_bin"] == "m"):
+    if settings_dict["map_bin"] != "m":
         print("Invalid 'map_bin' value. Must be 'm'. Terminating script.")  # noqa: T201
         sys.exit()
-    if not (settings_dict["source"] == "AQUA_MODIS"):
+    if settings_dict["source"] != "AQUA_MODIS":
         print("Invalid 'source' value. Must be 'AQUA_MODIS'. Terminating script.")  # noqa: T201
         sys.exit()
-    if not (settings_dict["variable"] == "CHL"):
+    if settings_dict["variable"] != "CHL":
         print("Invalid 'variable' value. Must be 'CHL'. Terminating script.")  # noqa: T201
         sys.exit()
     if (
@@ -136,14 +136,14 @@ def check_settings(settings_dict: dict):
             <= 90
         )
     ):
-        print(
+        print(  # noqa: T201
             "Invalid 'subset coords' value. Must be (lonmin, lonmax, latmin, latmax), "
             "with negative signals if applicable. Terminating script."
         )
         sys.exit()
 
 
-def find_nearest(array, target_value: int | float) -> (int, float):
+def find_nearest(array, target_value: int | float) -> (int, float):  # type: ignore[no-untyped-def, syntax]
     """Finds the index and value of an array element closest to a given target value.
 
     Parameters:
@@ -164,7 +164,7 @@ def find_nearest(array, target_value: int | float) -> (int, float):
     return idx, array[idx]
 
 
-def get_filelist_command(settings_dict: dict, datadir="../data") -> str:  #
+def get_filelist_command(settings_dict: dict, datadir="../data") -> str:  # type: ignore[no-untyped-def, type-arg]
     """
     Builds the command to get the list of files that correspond to the search.
     More info on https://oceandata.sci.gsfc.nasa.gov/api/file_search.
@@ -182,11 +182,11 @@ def get_filelist_command(settings_dict: dict, datadir="../data") -> str:  #
     global space_res, time_res  # noqa: PLW0603
     date_min = settings_dict["date_min"]
     date_max = settings_dict["date_max"]
-    space_res = settings_dict["space_res"] # noqa: PLW0603
-    time_res = settings_dict["time_res"] # noqa: PLW0603
+    space_res = settings_dict["space_res"]  # type: ignore[name-defined]
+    time_res = settings_dict["time_res"]  # type: ignore[name-defined]
 
     url = (
-        f"results_as_file=1&sensor_id=7&dtid=1043&sdate={date_min}&edate={date_max}"
+        f"results_as_file=1&sensor_id=7&dtid=1043&sdate={date_min}&edate={date_max}"  # type: ignore[name-defined]
         f"&subType=1&prod_id=chlor_a&resolution_id={space_res}&period={time_res}"
     )
 
@@ -196,10 +196,10 @@ def get_filelist_command(settings_dict: dict, datadir="../data") -> str:  #
         f"""{datadir}/filelist.txt"""
     )
 
-    return curl_command # noqa: RET 504
+    return curl_command  # noqa: RET504
 
 
-def get_opendap_urls(settings_dict: dict, datadir="../data") -> list:
+def get_opendap_urls(settings_dict: dict, datadir="../data") -> list:  # type: ignore[no-untyped-def, type-arg]
     """Builds urls for data access via opendap.
 
     Parameters:
@@ -213,20 +213,20 @@ def get_opendap_urls(settings_dict: dict, datadir="../data") -> list:
         list of urls for data access via opendap.
     """
 
-    global dataset_urls, source, variable # noqa: PLW0603
+    global dataset_urls, source, variable  # noqa: PLW0603
 
     check_settings(settings_dict)
     opendap_base_url = settings_dict["opendap_base_url"]
     level = settings_dict["level"]
     map_bin = settings_dict["map_bin"]
-    source = settings_dict["source"]
-    variable = settings_dict["variable"]
+    source = settings_dict["source"]  # type: ignore[name-defined]
+    variable = settings_dict["variable"]  # type: ignore[name-defined]
 
     # get & clean filenames list
     curl_command = get_filelist_command(settings_dict, datadir)
     os.system(curl_command)
 
-    with open(f"{datadir}/filelist.txt", mode="r") as f: # noqa: PTH123
+    with open(f"{datadir}/filelist.txt") as f:  # noqa: PTH123
         file_list = list(f)
 
     filenames = []
@@ -238,18 +238,18 @@ def get_opendap_urls(settings_dict: dict, datadir="../data") -> list:
     yeari, monthi, dayi, yearf, monthf, dayf = get_dates(filenames)
 
     # build opendap urls
-    dataset_urls = []
+    dataset_urls = []  # type: ignore[name-defined]
     for k in range(len(yeari)):
         url = (
-            f"{opendap_base_url}{level}SMI/{yeari[k]}/{monthi[k]}{dayi[k]}/"
+            f"{opendap_base_url}{level}SMI/{yeari[k]}/{monthi[k]}{dayi[k]}/"  # type: ignore[name-defined]
             f"{source}.{yeari[k]}{monthi[k]}{dayi[k]}_{yearf[k]}{monthf[k]}{dayf[k]}."
             f"{level}{map_bin}.{time_res}.{variable}.chlor_a.{space_res}.nc"
         )
-        dataset_urls.append(url)
-    return dataset_urls
+        dataset_urls.append(url)  # type: ignore[name-defined]
+    return dataset_urls  # type: ignore[no-any-return, name-defined]
 
 
-def get_dates(filenames: list) -> (list, list, list, list, list, list):
+def get_dates(filenames: list) -> (list, list, list, list, list, list):  # type: ignore[type-arg, syntax]
     """Gets dates from each filename in order to build the opendap urls.
 
     Parameters
@@ -281,15 +281,15 @@ def get_dates(filenames: list) -> (list, list, list, list, list, list):
     dayi, dayf = [], []
     for filename in filenames:
         dates = re.findall(dates_regex, filename)
-        yeari.append(dates[0][0:4]), yearf.append(dates[1][0:4])
-        monthi.append(dates[0][4:6]), monthf.append(dates[1][4:6])
-        dayi.append(dates[0][6:]), dayf.append(dates[1][6:])
+        yeari.append(dates[0][0:4]), yearf.append(dates[1][0:4])  # type: ignore[func-returns-value]
+        monthi.append(dates[0][4:6]), monthf.append(dates[1][4:6])  # type: ignore[func-returns-value]
+        dayi.append(dates[0][6:]), dayf.append(dates[1][6:])  # type: ignore[func-returns-value]
         del dates
     del dates_regex
     return yeari, monthi, dayi, yearf, monthf, dayf
 
 
-def get_dataset_keys(dataset_path: str) -> (str, str, str):
+def get_dataset_keys(dataset_path: str) -> (str, str, str):  # type: ignore[syntax]
     """Gets the name of variables correspondent to longitude,
     latitude and chorophyll in a given dataset.
 
@@ -314,8 +314,8 @@ def get_dataset_keys(dataset_path: str) -> (str, str, str):
     var_dict = ds.variables
 
     # find the variable names (keys) correspondent to lon, lat and chl
-    keys_dict = {"lon_key": [], "lat_key": [], "chl_key": []}
-    for key in var_dict.keys(): # noqa: SIM118
+    keys_dict = {"lon_key": [], "lat_key": [], "chl_key": []}  # type: ignore[var-annotated]
+    for key in var_dict.keys():  # noqa: SIM118
         for word_part in ["lon", "lat", "chl"]:
             if word_part in key:
                 keys_dict[f"{word_part}_key"] = key
@@ -324,7 +324,7 @@ def get_dataset_keys(dataset_path: str) -> (str, str, str):
     # making sure all the keys were found
     for item in ["lon_key", "lat_key", "chl_key"]:
         if len(keys_dict[item]) == 0:
-            print( # noqa: T201
+            print(  # noqa: T201
                 f"key for {item} was not identified in required dataset. "
                 f"Terminating script."
             )
@@ -336,8 +336,9 @@ def get_dataset_keys(dataset_path: str) -> (str, str, str):
 
 
 def get_subsetted_dataset(
-    settings_dict: dict, dataset_urls: list
-) -> (list, list, list, list, list):
+    settings_dict: dict,  # type: ignore[type-arg]
+    dataset_urls: list,  # type: ignore[type-arg]
+) -> (list, list, list, list, list):  # type: ignore[syntax]
     """Subsets a dataset for the chosen geographical area, for multiple time-steps.
 
     Parameters
@@ -356,19 +357,19 @@ def get_subsetted_dataset(
     time_start : list
     time_end : list
     """
-    global subset_coords # noqa: PLW0603
-    subset_coords = settings_dict["subset_coords"]
+    global subset_coords  # noqa: PLW0603
+    subset_coords = settings_dict["subset_coords"]  # type: ignore[name-defined]
 
     try:
         dataset = nc.Dataset(
             dataset_urls[0]
         )  # calls the nc dataset directly from the url
     except OSError:  # OSError: [Errno -70] NetCDF: DAP server error:
-        print("## -- DAP server error: not able to reach files. Try again later. -- ##") # noqa: T201
+        print("## -- DAP server error: not able to reach files. Try again later. -- ##")  # noqa: T201
         sys.exit()
 
     lon_key, lat_key, chl_key = get_dataset_keys(dataset_urls[0])
-    print( # noqa: T201
+    print(  # noqa: T201
         " \n ##### ----- Hang in there... this may take some time...  ----- ##### \n "
     )
 
@@ -376,12 +377,12 @@ def get_subsetted_dataset(
     lat_original = dataset[lat_key][:]
 
     ilon = [
-        find_nearest(lon_original, subset_coords[0])[0],
-        find_nearest(lon_original, subset_coords[1])[0],
+        find_nearest(lon_original, subset_coords[0])[0],  # type: ignore[name-defined]
+        find_nearest(lon_original, subset_coords[1])[0],  # type: ignore[name-defined]
     ]
     ilat = [
-        find_nearest(lat_original, subset_coords[2])[0],
-        find_nearest(lat_original, subset_coords[3])[0],
+        find_nearest(lat_original, subset_coords[2])[0],  # type: ignore[name-defined]
+        find_nearest(lat_original, subset_coords[3])[0],  # type: ignore[name-defined]
     ]
 
     # doing this b/c lat and/or lon may not monotonically decrease
@@ -398,17 +399,17 @@ def get_subsetted_dataset(
     #     chl = dataset.variables[chl_key][ilat[0]:ilat[1], ilon[0]:ilon[1]]
 
     # Accumulate times and subsetted chl values here, for all dataset_urls
-    time_start = []
+    time_start = []  # type: ignore[var-annotated]
     time_end = []
     for dataset_url in dataset_urls:
-        print( # noqa: T201
+        print(  # noqa: T201
             f" Gathering info from file {dataset_url.split('/')[-1]} "
             f"- file {len(time_start) + 1}/{len(dataset_urls)} "
         )
         try:
             _dataset = nc.Dataset(dataset_url)
         except OSError:
-            print(f"file {dataset_url.split('/')[-1]} is not reachable") # noqa: T201
+            print(f"file {dataset_url.split('/')[-1]} is not reachable")  # noqa: T201
             continue
 
         time_start.append(
@@ -432,8 +433,12 @@ def get_subsetted_dataset(
     return lon, lat, chl, time_start, time_end
 
 
-def save_dataset(
-    lon: np.ndarray, lat: np.ndarray, chl: np.ndarray, time_start: list, time_end: list
+def save_dataset(  # type: ignore[no-untyped-def]
+    lon: np.ndarray,
+    lat: np.ndarray,
+    chl: np.ndarray,
+    time_start: list,  # type: ignore[type-arg]
+    time_end: list,  # type: ignore[type-arg]
 ):
     """Saves the dataset in a netcdf file.
 
@@ -448,12 +453,12 @@ def save_dataset(
     # two options here: cftime and deal with it as string
 
     # get info for the filename of the dataset to be saved
-    dataset = nc.Dataset(dataset_urls[0])
-    lon_key, lat_key, chl_key = get_dataset_keys(dataset_urls[0])
-    yeari, monthi, dayi, yearf, monthf, dayf = get_dates(dataset_urls)
+    dataset = nc.Dataset(dataset_urls[0])  # type: ignore[name-defined]
+    lon_key, lat_key, chl_key = get_dataset_keys(dataset_urls[0])  # type: ignore[name-defined]
+    yeari, monthi, dayi, yearf, monthf, dayf = get_dates(dataset_urls)  # type: ignore[name-defined]
 
     filename = (
-        f"../data/{source}_{variable}_{space_res}_{time_res}_"
+        f"../data/{source}_{variable}_{space_res}_{time_res}_"  # type: ignore[name-defined]
         f"{yeari[0]}{monthi[0]}_{yearf[-1]}{monthf[-1]}_"
         f"{subset_coords[0]}_{subset_coords[1]}_"
         f"{subset_coords[2]}_{subset_coords[-1]}.nc"
@@ -575,4 +580,4 @@ def save_dataset(
         ds.variables["lon"].setncattr(attr, getattr(dataset.variables[lon_key], attr))
 
     ds.close()
-    print(f"## -- File {filename} saved! -- ##") # noqa: T201
+    print(f"## -- File {filename} saved! -- ##")  # noqa: T201
