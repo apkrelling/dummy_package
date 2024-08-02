@@ -33,9 +33,9 @@ def settings_dict():
 
 
 # temporary folder to store filelist.txt
-@pytest.fixture(scope="function")
+@pytest.fixture(scope="function") # noqa: PT003
 def tmpdir(tmp_path):
-    tmp_dir = tmp_path
+    tmp_dir = tmp_path # noqa: RET504
     return tmp_dir
 
 
