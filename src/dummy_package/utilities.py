@@ -29,6 +29,7 @@ def debug(func):
     return wrapper_debug
 
 
+
 def check_date_format(item: str) -> bool:
     """Tests if input has "%Y-%m-%d %H:%M:%S" date format.
 

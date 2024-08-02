@@ -16,6 +16,7 @@ import importlib.metadata
 def test_version():
     assert importlib.metadata.version("dummy_package") == m.__version__
 
+
 @pytest.fixture
 def settings_dict():
     return {
