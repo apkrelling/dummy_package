@@ -219,7 +219,7 @@ dependencies:
   - zlib=1.2.13=hd590300_5
   - zstd=1.5.5=hfc55251_0
   - pip:
-      - astroid==2.14.2
+      - asteroid==2.14.2
       - attrs==22.2.0
       - coverage==7.2.1
       - dill==0.3.6
