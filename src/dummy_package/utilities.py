@@ -18,10 +18,10 @@ def debug(func):
         args_repr = [repr(a) for a in args]  # get args
         kwargs_repr = [f"{key}={val!r}" for key, val in kwargs.items()]  # get kwargs
         signature = ", ".join(args_repr + kwargs_repr)  # print the func called
-        print(f"Calling {func.__name__}({signature})")
+        print(f"Calling {func.__name__}({signature})") # noqa: T201
         value = func(*args, **kwargs)
-        print(f"{func.__name__!r} returned {value!r}")  # print the func output
-        print(
+        print(f"{func.__name__!r} returned {value!r}")   # noqa: T201
+        print(  # noqa: T201
             f"Data types {[type(item) for item in value]}"
         )  # print the output data types
         return value
@@ -64,13 +64,13 @@ def check_settings(settings_dict: dict):
     """
 
     if not check_date_format(settings_dict["date_min"]):
-        print(
+        print(  # noqa: T201
             "Invalid 'date_min' value. Must be in '%Y-%m-%d %H:%M:%S' format, "
             "such as'2021-10-01 00:00:00'. Terminating script."
         )
         sys.exit()
     if not check_date_format(settings_dict["date_max"]):
-        print(
+        print(  # noqa: T201
             "Invalid 'date_max' value. Must be in '%Y-%m-%d %H:%M:%S' format, "
             "such as'2021-10-01 00:00:00'. Terminating script."
         )
@@ -78,7 +78,7 @@ def check_settings(settings_dict: dict):
     if not (
         (settings_dict["space_res"] == "4km") | (settings_dict["space_res"] == "9km")
     ):
-        print("Invalid 'space_res' value. Must be '4km' or '9km'. Terminating script.")
+        print("Invalid 'space_res' value. Must be '4km' or '9km'. Terminating script.")  # noqa: T201
         sys.exit()
     if (
         not (settings_dict["time_res"] == "YR")
@@ -86,7 +86,7 @@ def check_settings(settings_dict: dict):
         | (settings_dict["time_res"] == "8D")
         | (settings_dict["time_res"] == "DAY")
     ):
-        print(
+        print(  # noqa: T201
             "Invalid 'time_res' value. Must be either 'YR', 'MO', '8D', 'DAY'. "
             "Terminating script."
         )
@@ -95,23 +95,23 @@ def check_settings(settings_dict: dict):
         settings_dict["opendap_base_url"]
         == "http://oceandata.sci.gsfc.nasa.gov/opendap/MODISA/"
     ):
-        print(
+        print(  # noqa: T201
             "Invalid 'opendap_base_url' value. "
             "Must be 'http://oceandata.sci.gsfc.nasa.gov/opendap/MODISA/'. "
             "Terminating script."
         )
         sys.exit()
     if not (settings_dict["level"] == "L3"):
-        print("Invalid 'level' value. Must be 'L3'. Terminating script.")
+        print("Invalid 'level' value. Must be 'L3'. Terminating script.")  # noqa: T201
         sys.exit()
     if not (settings_dict["map_bin"] == "m"):
-        print("Invalid 'map_bin' value. Must be 'm'. Terminating script.")
+        print("Invalid 'map_bin' value. Must be 'm'. Terminating script.")  # noqa: T201
         sys.exit()
     if not (settings_dict["source"] == "AQUA_MODIS"):
-        print("Invalid 'source' value. Must be 'AQUA_MODIS'. Terminating script.")
+        print("Invalid 'source' value. Must be 'AQUA_MODIS'. Terminating script.")  # noqa: T201
         sys.exit()
     if not (settings_dict["variable"] == "CHL"):
-        print("Invalid 'variable' value. Must be 'CHL'. Terminating script.")
+        print("Invalid 'variable' value. Must be 'CHL'. Terminating script.")  # noqa: T201
         sys.exit()
     if (
         not (len(settings_dict["subset_coords"]) == 4)
@@ -179,11 +179,11 @@ def get_filelist_command(settings_dict: dict, datadir="../data") -> str:  #
     Returns:
         curl_command : string
     """
-    global space_res, time_res
+    global space_res, time_res  # noqa: PLW0603
     date_min = settings_dict["date_min"]
     date_max = settings_dict["date_max"]
-    space_res = settings_dict["space_res"]
-    time_res = settings_dict["time_res"]
+    space_res = settings_dict["space_res"] # noqa: PLW0603
+    time_res = settings_dict["time_res"] # noqa: PLW0603
 
     url = (
         f"results_as_file=1&sensor_id=7&dtid=1043&sdate={date_min}&edate={date_max}"
@@ -196,7 +196,7 @@ def get_filelist_command(settings_dict: dict, datadir="../data") -> str:  #
         f"""{datadir}/filelist.txt"""
     )
 
-    return curl_command
+    return curl_command # noqa: RET 504
 
 
 def get_opendap_urls(settings_dict: dict, datadir="../data") -> list:
@@ -213,7 +213,7 @@ def get_opendap_urls(settings_dict: dict, datadir="../data") -> list:
         list of urls for data access via opendap.
     """
 
-    global dataset_urls, source, variable
+    global dataset_urls, source, variable # noqa: PLW0603
 
     check_settings(settings_dict)
     opendap_base_url = settings_dict["opendap_base_url"]
@@ -226,7 +226,7 @@ def get_opendap_urls(settings_dict: dict, datadir="../data") -> list:
     curl_command = get_filelist_command(settings_dict, datadir)
     os.system(curl_command)
 
-    with open(f"{datadir}/filelist.txt", mode="r") as f:
+    with open(f"{datadir}/filelist.txt", mode="r") as f: # noqa: PTH123
         file_list = list(f)
 
     filenames = []
@@ -315,7 +315,7 @@ def get_dataset_keys(dataset_path: str) -> (str, str, str):
 
     # find the variable names (keys) correspondent to lon, lat and chl
     keys_dict = {"lon_key": [], "lat_key": [], "chl_key": []}
-    for key in var_dict.keys():
+    for key in var_dict.keys(): # noqa: SIM118
         for word_part in ["lon", "lat", "chl"]:
             if word_part in key:
                 keys_dict[f"{word_part}_key"] = key
@@ -324,7 +324,7 @@ def get_dataset_keys(dataset_path: str) -> (str, str, str):
     # making sure all the keys were found
     for item in ["lon_key", "lat_key", "chl_key"]:
         if len(keys_dict[item]) == 0:
-            print(
+            print( # noqa: T201
                 f"key for {item} was not identified in required dataset. "
                 f"Terminating script."
             )
@@ -356,7 +356,7 @@ def get_subsetted_dataset(
     time_start : list
     time_end : list
     """
-    global subset_coords
+    global subset_coords # noqa: PLW0603
     subset_coords = settings_dict["subset_coords"]
 
     try:
@@ -364,11 +364,11 @@ def get_subsetted_dataset(
             dataset_urls[0]
         )  # calls the nc dataset directly from the url
     except OSError:  # OSError: [Errno -70] NetCDF: DAP server error:
-        print("## -- DAP server error: not able to reach files. Try again later. -- ##")
+        print("## -- DAP server error: not able to reach files. Try again later. -- ##") # noqa: T201
         sys.exit()
 
     lon_key, lat_key, chl_key = get_dataset_keys(dataset_urls[0])
-    print(
+    print( # noqa: T201
         " \n ##### ----- Hang in there... this may take some time...  ----- ##### \n "
     )
 
@@ -401,14 +401,14 @@ def get_subsetted_dataset(
     time_start = []
     time_end = []
     for dataset_url in dataset_urls:
-        print(
+        print( # noqa: T201
             f" Gathering info from file {dataset_url.split('/')[-1]} "
             f"- file {len(time_start) + 1}/{len(dataset_urls)} "
         )
         try:
             _dataset = nc.Dataset(dataset_url)
         except OSError:
-            print(f"file {dataset_url.split('/')[-1]} is not reachable")
+            print(f"file {dataset_url.split('/')[-1]} is not reachable") # noqa: T201
             continue
 
         time_start.append(
@@ -575,4 +575,4 @@ def save_dataset(
         ds.variables["lon"].setncattr(attr, getattr(dataset.variables[lon_key], attr))
 
     ds.close()
-    print(f"## -- File {filename} saved! -- ##")
+    print(f"## -- File {filename} saved! -- ##") # noqa: T201
