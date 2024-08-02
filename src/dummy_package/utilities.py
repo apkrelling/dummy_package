@@ -186,8 +186,8 @@ def get_filelist_command(settings_dict: dict, datadir="../data") -> str:  # type
     time_res = settings_dict["time_res"]  # type: ignore[name-defined]
 
     url = (
-        f"results_as_file=1&sensor_id=7&dtid=1043&sdate={date_min}&edate={date_max}"  # type: ignore[name-defined]
-        f"&subType=1&prod_id=chlor_a&resolution_id={space_res}&period={time_res}"
+        f"results_as_file=1&sensor_id=7&dtid=1043&sdate={date_min}&edate={date_max}"
+        f"&subType=1&prod_id=chlor_a&resolution_id={space_res}&period={time_res}"  # type: ignore[name-defined]
     )
 
     curl_command = (
@@ -241,9 +241,9 @@ def get_opendap_urls(settings_dict: dict, datadir="../data") -> list:  # type: i
     dataset_urls = []  # type: ignore[name-defined]
     for k in range(len(yeari)):
         url = (
-            f"{opendap_base_url}{level}SMI/{yeari[k]}/{monthi[k]}{dayi[k]}/"  # type: ignore[name-defined]
-            f"{source}.{yeari[k]}{monthi[k]}{dayi[k]}_{yearf[k]}{monthf[k]}{dayf[k]}."
-            f"{level}{map_bin}.{time_res}.{variable}.chlor_a.{space_res}.nc"
+            f"{opendap_base_url}{level}SMI/{yeari[k]}/{monthi[k]}{dayi[k]}/"
+            f"{source}.{yeari[k]}{monthi[k]}{dayi[k]}_{yearf[k]}{monthf[k]}{dayf[k]}."  # type: ignore[name-defined]
+            f"{level}{map_bin}.{time_res}.{variable}.chlor_a.{space_res}.nc"  # type: ignore[name-defined]
         )
         dataset_urls.append(url)  # type: ignore[name-defined]
     return dataset_urls  # type: ignore[no-any-return, name-defined]
@@ -460,8 +460,8 @@ def save_dataset(  # type: ignore[no-untyped-def]
     filename = (
         f"../data/{source}_{variable}_{space_res}_{time_res}_"  # type: ignore[name-defined]
         f"{yeari[0]}{monthi[0]}_{yearf[-1]}{monthf[-1]}_"
-        f"{subset_coords[0]}_{subset_coords[1]}_"
-        f"{subset_coords[2]}_{subset_coords[-1]}.nc"
+        f"{subset_coords[0]}_{subset_coords[1]}_"  # type: ignore[name-defined]
+        f"{subset_coords[2]}_{subset_coords[-1]}.nc"  # type: ignore[name-defined]
     )
     ds = nc.Dataset(filename, "w", format="NETCDF4")
 

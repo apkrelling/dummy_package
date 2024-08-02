@@ -13,7 +13,8 @@ from datetime import datetime
 
 import matplotlib.dates as mdates  # type: ignore[import-not-found]
 import matplotlib.pyplot as plt  # type: ignore[import-not-found]
-from matplotlib import cm, ticker
+# from matplotlib import cm, ticker
+import matplotlib as mpl
 from matplotlib.dates import DateFormatter
 from utilities import (  # type: ignore[import-not-found]
     find_nearest,
@@ -62,8 +63,8 @@ for t in range(len(time_start)):
         chl[t, ...].squeeze(),
         vmin=0.0001,
         vmax=100,
-        locator=ticker.LogLocator(),
-        cmap=cm.viridis,
+        locator=mpl.ticker.LogLocator(),
+        cmap=mpl.cm.jet,
     )
     if t == 0:
         cbar = fig.colorbar(img, ax=ax)
@@ -77,41 +78,41 @@ del fig
 
 # it there's more than one time-step, plot chl timeseries at the designated location
 if len(time_start) > 1:
-    # - plot one frame to get the location for timeseries
-    fig, ax = plt.subplots()
-    aux = ax.contourf(
-        lon,
-        lat,
-        chl[0, ...].squeeze(),
-        vmin=0.0001,
-        vmax=100,
-        locator=ticker.LogLocator(),
-        cmap=cm.viridis,
-    )
-    ax.set_title(
-        f" Specify point for timeseries plot \n "
-        f"Chlorophyll Concentration  {title_datetime[0]}"
-    )
-    ax.set_xlabel("longitude")
-    ax.set_ylabel("latitude")
-    loc = plt.ginput(1, timeout=-1)[0]
-    plt.close()
-    del fig
-
-    # plot timeseries
-    loi, lov = find_nearest(lon, loc[0])
-    lai, lav = find_nearest(lat, loc[1])
-
-    fig, ax = plt.subplots()
-    plt.plot_date(time_start_dt, chl[:, lai, loi].squeeze())
-    ax.xaxis.set_major_locator(mdates.DayLocator(bymonthday=[1, 15]))
-    ax.xaxis.set_major_formatter(formatter)
-    ax.xaxis.set_tick_params(rotation=20, labelsize=10)
-    ax.set_title(f"Chlorophyll Concentration @ lon = {lov:.1f}, lat = {lav:.1f}")
-    # plt.show()
-    time.sleep(1)
-    plt.close()
-    del fig
+    # # - plot one frame to get the location for timeseries
+    # fig, ax = plt.subplots()
+    # aux = ax.contourf(
+    #     lon,
+    #     lat,
+    #     chl[0, ...].squeeze(),
+    #     vmin=0.0001,
+    #     vmax=100,
+    #     locator=ticker.LogLocator(),
+    #     cmap=cm.viridis,
+    # )
+    # ax.set_title(
+    #     f" Specify point for timeseries plot \n "
+    #     f"Chlorophyll Concentration  {title_datetime[0]}"
+    # )
+    # ax.set_xlabel("longitude")
+    # ax.set_ylabel("latitude")
+    # loc = plt.ginput(1, timeout=-1)[0]
+    # plt.close()
+    # del fig
+    #
+    # # plot timeseries
+    # loi, lov = find_nearest(lon, loc[0])
+    # lai, lav = find_nearest(lat, loc[1])
+    #
+    # fig, ax = plt.subplots()
+    # plt.plot_date(time_start_dt, chl[:, lai, loi].squeeze())
+    # ax.xaxis.set_major_locator(mdates.DayLocator(bymonthday=[1, 15]))
+    # ax.xaxis.set_major_formatter(formatter)
+    # ax.xaxis.set_tick_params(rotation=20, labelsize=10)
+    # ax.set_title(f"Chlorophyll Concentration @ lon = {lov:.1f}, lat = {lav:.1f}")
+    # # plt.show()
+    # time.sleep(1)
+    # plt.close()
+    # del fig
     save_dataset(lon, lat, chl, time_start, time_end)
 else:
     save_dataset(lon, lat, chl, time_start, time_end)
