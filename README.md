@@ -15,7 +15,7 @@
 
 
 <!-- prettier-ignore-start -->
-<!--[actions-badge]:            https://github.com/apkrelling/dummy_package/workflows/CI/badge.svg -->
+<!-- [actions-badge]:            https://github.com/apkrelling/dummy_package/workflows/CI/badge.svg -->
 <!-- [actions-link]:             https://github.com/apkrelling/dummy_package/actions
 [conda-badge]:              https://img.shields.io/conda/vn/conda-forge/dummy_package
 [conda-link]:               https://github.com/conda-forge/dummy_package-feedstock
